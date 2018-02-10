@@ -4,6 +4,31 @@ import os
 import sys
 import math
 
+# Fórmulas generales
+
+def standard_deviation(variance):
+    return math.sqrt(variance)
+
+def general():
+    print("Escriba los valores de x separados por un espacio: ")
+    xs = [int(i) for i in input().split(' ')]
+    print("Escriba los valores de las probabilidades de x (p(x)) separadas por un espacio: ")
+    ps = [float(i) for i in input().split(' ')]
+
+    media = sum(xs[i] * ps[i] for i in range(len(xs)))
+    varianza = sum(pow(xs[i] - media, 2) * ps[i] for i in range(len(xs)))
+    dev = standard_deviation(varianza)
+
+    print('Media: {0} Varianza: {1} Desviación: {2}'.format(
+        media,
+        varianza,
+        dev
+        ))
+
+    input("Presiona [Enter] para continuar...")
+
+# Distribución uniforme discreta
+
 def distribution():
     i = float(input("Ingresa el rango inferior de la sumatoria:"))
     n = float(input("Ingresa el rango superior de la sumatoria:"))
@@ -41,29 +66,118 @@ def discrete_variance(i, n, media):
 
     return variance
 
-
-def standard_deviation(variance):
-    return math.sqrt(variance)
-
+# Distribución binomial
 
 def binomial_distribution():
     print("Dist")
 
+# Poisson distribution
+
+def p_lambda():
+    n = int(input("Valor de n: "))
+    p = int(input("Valor de p: "))
+    print("Lambda = n * p")
+    return [n*p, n*p]
+
+def poisson_formula(x, l):
+    up = math.exp(-l) * pow(l,x)
+    down = math.factorial(x)
+    return up/down
+
+def p_prob():
+    l = float(input("Valor de lambda: "))
+    x = int(input("Valor de x: "))
+    return [round(poisson_formula(x, l), 5) * 100 , l]
+
+def p_acum():
+    inf = int(input("Límite inferior: "))
+    sup = int(input("Límite superior: "))
+    l = float(input("Valor de lambda: "))
+    res = sum(poisson_formula(i, l) for i in range(inf, sup + 1))
+    return [round(res, 5) * 100 , l]
+
+
+poisson_ops = {
+    1 : p_lambda,
+    2 : p_prob,
+    3 : p_acum,
+}
+
 def poisson_distribution():
-    print("Dist")
-    input("Press [Enter] to continue...")
+    print("Distrubución de Poisson")
+    print("Media = Varianza = Lambda")
+    print("1. Calcular Lambda")
+    print("2. Calcular Probabilidad")
+    print("3. Calcular Acumulativa")
+    op = int(input(">> "))
+
+    res = poisson_ops[op]()
+    print("Resultado: ", res[0])
+    print('Media: {0} Varianza: {1} Desviación: {2}'.format(
+        res[1],
+        res[1],
+        standard_deviation(res[1])
+        ))
+
+    input("Presiona [Enter] para continuar...")
+
+# Distribución exponencial
+
+def exp_formula(x,l):
+    a = math.exp(-l * x)
+    return 1 - a
+
+def exp_prob(l):
+    x = int(input("Valor de x: "))
+    return round(exp_formula(x, l), 5) * 100
+
+def exp_acum(l):
+    inf = int(input("Límite inferior: "))
+    sup = int(input("Límite superior: "))
+    res = exp_formula(sup, l) - exp_formula(inf, l)
+    return round(res, 5) * 100
+
+
+expo_ops = {
+    1 : exp_prob,
+    2 : exp_acum,
+}
+
+def exponential_distribution():
+    print("Distribución Exponencial")
+    print("Media = 1/lambda   Varianza = 1/lambda^2")
+    print("1. Calcular Probabilidad")
+    print("2. Calcular Acumulativa")
+    op = int(input(">> "))
+
+    l = float(input("Valor de Lambda: "))
+    media = (1/l)
+    varianza = (1 / pow(l,2))
+    res = expo_ops[op](l)
+    print("Resultado: ", res)
+    print('Media: {0} Varianza: {1} Desviación: {2}'.format(
+        media,
+        varianza,
+        standard_deviation(varianza)
+        ))
+
+    input("Presiona [Enter] para continuar...")
 
 def exit():
     sys.exit()
 
 
 functions = [
-        {   "name": "Distrubución de probabilidad discreta general",
+        {   "name": "Fórmulas generales (media, varianza, devest)",
+            "function": general },
+        {   "name": "Distribución Uniforme Discreta",
             "function": distribution },
         {   "name": "Distribución Binomial",
             "function": binomial_distribution },
         {   "name": "Distribución de Poisson",
             "function": poisson_distribution },
+        {   "name": "Distribución exponencial",
+            "function": exponential_distribution },
         { "name": "Exit", "function": exit },
         ]
 

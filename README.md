@@ -3,15 +3,15 @@ TC2007_Quantitative-Methods
 
 ## Distribuciones Discretas
 
-* [ ] Fórmulas generales 
-    - [ ] media
-    - [ ] varianza
-    - [ ] devest
+* [X] Fórmulas generales 
+    - [X] media
+    - [X] varianza
+    - [X] devest
 * [ ] Uniforme discreta
     - [ ] probabilidades
-    - [ ] media
-    - [ ] varianza
-    - [ ] devest
+    - [X] media
+    - [X] varianza
+    - [X] devest
     - [ ] acumulativas
 * [ ] Binomial
     - [ ] probabilidades
@@ -19,18 +19,18 @@ TC2007_Quantitative-Methods
     - [ ] varianza
     - [ ] desviación estándar
     - [ ] acumulativas
-* [ ] Poisson
-    - [ ] probabilidades
-    - [ ] media
-    - [ ] varianza
-    - [ ] desviación estándar
-    - [ ] acumulativas
+* [X] Poisson
+    - [X] probabilidades
+    - [X] media
+    - [X] varianza
+    - [X] desviación estándar
+    - [X] acumulativas
 
 ## Distribuciones Continuas
 
-* [ ] Exponencial
-    - [ ] probabilidades
-    - [ ] media
-    - [ ] varianza
-    - [ ] devest
-    - [ ] acumulación
+* [X] Exponencial
+    - [X] probabilidades
+    - [X] media
+    - [X] varianza
+    - [X] devest
+    - [X] acumulación
