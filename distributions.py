@@ -47,7 +47,8 @@ def general():
 
 # Distribución uniforme discreta
 
-def distribution():
+def d_sum():
+
     i = float(input("Ingresa el rango inferior de la sumatoria:"))
     n = float(input("Ingresa el rango superior de la sumatoria:"))
 
@@ -62,6 +63,28 @@ def distribution():
         ))
 
     input("Presiona [Enter] para continuar...")
+
+def d_average():
+
+    n = float(input("Ingrese el numero de posibles casos: "))
+    ans = 1 / n
+    print("La posibilidad es:", ans)
+
+    input("Presiona [Enter] para continuar...")
+
+distribution_ops = {
+        1 : d_sum,
+        2 : d_average,
+        }
+
+def distribution():
+    print("Distrubución Uniforme")
+    print("1. Calcular Probailidad, Media y Varianza")
+    print("2. Calcular Probabilidad")
+    op = int(input(">> "))
+
+    distribution_ops[op]()
+
 
 def discrete_media(i, n):
 
