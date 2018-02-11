@@ -91,19 +91,19 @@ def b_lambda():
     k = int(input("Numero de éxitos (k): "))
     p = float(input("Probabilidad de éxito (p): "))
 
-    q = 1 - p
     media = n * p
     variance = n * p * q
 
-    prob = b_formula(n, k, p, q)
+    prob = b_formula(n, k, p)
 
     print('Probabilidad:' , prob)
     print('Media: {0} Varianza: {1} Desviación: {2}'.format(
         media, variance, standard_deviation(variance)))
 
 
-def b_formula(n, k, p, q):
+def b_formula(n, k, p):
 
+    q = 1 - p
     subs = n - k
 
     return combinatory(n, k) * math.pow(p, k) * math.pow(q, subs)
@@ -113,12 +113,10 @@ def b_acum():
     inf = int(input("Límite inferior: "))
     sup = int(input("Límite superior: "))
     n = int(input("Número de pruebas (n): "))
-    k = int(input("Numero de éxitos (k): "))
-    p = int(input("Probabilidad de éxito (p): "))
+    p = float(input("Probabilidad de éxito (p): "))
 
-    q = 1 - p
-
-    print("TODO")
+    acum = sum(b_formula(n, i, p) for i in range(inf, sup + 1))
+    print("Acumulada", acum)
 
 
 binomial_ops = {
