@@ -14,10 +14,10 @@ TC2007_Quantitative-Methods
     - [X] devest
     - [ ] acumulativas
 * [ ] Binomial
-    - [ ] probabilidades
-    - [ ] media
-    - [ ] varianza
-    - [ ] desviación estándar
+    - [X] probabilidades
+    - [X] media
+    - [X] varianza
+    - [X] desviación estándar
     - [ ] acumulativas
 * [X] Poisson
     - [X] probabilidades

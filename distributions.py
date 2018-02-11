@@ -2,9 +2,27 @@
 
 import os
 import sys
+import time
 import math
 
 # Fórmulas generales
+
+def factorial(n):
+
+    i = 1
+    factorial = 1
+
+    while(i <= n):
+        factorial *= i
+        i += 1
+
+    return factorial
+
+def combinatory(n, k):
+
+    subs = n - k
+    return (factorial(n)) / (factorial(k) * factorial(subs))
+
 
 def standard_deviation(variance):
     return math.sqrt(variance)
@@ -68,8 +86,59 @@ def discrete_variance(i, n, media):
 
 # Distribución binomial
 
+def b_lambda():
+    n = int(input("Número de pruebas (n): "))
+    k = int(input("Numero de éxitos (k): "))
+    p = float(input("Probabilidad de éxito (p): "))
+
+    q = 1 - p
+    media = n * p
+    variance = n * p * q
+
+    prob = b_formula(n, k, p, q)
+
+    print('Probabilidad:' , prob)
+    print('Media: {0} Varianza: {1} Desviación: {2}'.format(
+        media, variance, standard_deviation(variance)))
+
+
+def b_formula(n, k, p, q):
+
+    subs = n - k
+
+    return combinatory(n, k) * math.pow(p, k) * math.pow(q, subs)
+
+
+def b_acum():
+    inf = int(input("Límite inferior: "))
+    sup = int(input("Límite superior: "))
+    n = int(input("Número de pruebas (n): "))
+    k = int(input("Numero de éxitos (k): "))
+    p = int(input("Probabilidad de éxito (p): "))
+
+    q = 1 - p
+
+    print("TODO")
+
+
+binomial_ops = {
+        1 : b_lambda,
+        2 : b_acum,
+        }
+
+
 def binomial_distribution():
-    print("Dist")
+    print("Distrubución Binomial")
+    print("1. Calcular Probailidad, Media y Varianza")
+    print("2. Calcular Acumulativa")
+    op = int(input(">> "))
+
+    binomial_ops[op]()
+
+
+    op = int(input(">> "))
+    input("Presiona [Enter] para continuar...")
+
 
 # Poisson distribution
 
@@ -98,10 +167,10 @@ def p_acum():
 
 
 poisson_ops = {
-    1 : p_lambda,
-    2 : p_prob,
-    3 : p_acum,
-}
+        1 : p_lambda,
+        2 : p_prob,
+        3 : p_acum,
+        }
 
 def poisson_distribution():
     print("Distrubución de Poisson")
@@ -139,9 +208,9 @@ def exp_acum(l):
 
 
 expo_ops = {
-    1 : exp_prob,
-    2 : exp_acum,
-}
+        1 : exp_prob,
+        2 : exp_acum,
+        }
 
 def exponential_distribution():
     print("Distribución Exponencial")
@@ -180,6 +249,7 @@ functions = [
             "function": exponential_distribution },
         { "name": "Exit", "function": exit },
         ]
+
 
 def main():
 
