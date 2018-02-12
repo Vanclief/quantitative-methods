@@ -115,11 +115,12 @@ def b_lambda():
     p = float(input("Probabilidad de éxito (p): "))
 
     media = n * p
+    q = 1 - p
     variance = n * p * q
 
     prob = b_formula(n, k, p)
 
-    print('Probabilidad:' , prob)
+    print('Probabilidad:', prob)
     print('Media: {0} Varianza: {1} Desviación: {2}'.format(
         media, variance, standard_deviation(variance)))
 
