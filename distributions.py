@@ -151,7 +151,7 @@ binomial_ops = {
 
 def binomial_distribution():
     print("Distrubución Binomial")
-    print("1. Calcular Probailidad, Media y Varianza")
+    print("1. Calcular Probabilidad, Media y Varianza")
     print("2. Calcular Acumulativa")
     op = int(input(">> "))
 
