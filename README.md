@@ -34,3 +34,8 @@ TC2007_Quantitative-Methods
     - [X] varianza
     - [X] devest
     - [X] acumulación
+
+## Generadores de números aleatorios
+
+* [ ] Método de Cuadrados Medios
+* [X] GCL
