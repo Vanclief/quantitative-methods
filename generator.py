@@ -3,6 +3,7 @@
 import os
 import sys
 import math
+import random
 
 def mcm(seed):
   ans = math.pow(seed, 2)
@@ -26,6 +27,24 @@ def gcl():
 
 	input("Presiona [Enter] para continuar...")
 
+# Usando la función f(x) = 2x para el rango de 0 a 1 inclusivo
+def arm():
+	m = 2
+	a = 0
+	b = 1
+	count = 0
+	print("Itr | Número")
+	while count < 5000:
+		r1 = random.random()
+		r2 = random.random()
+		x = a + (b-a)*r1
+		fx = 2*x
+		if(r2 <= fx/m):
+			count = count+1
+			print(count, " | ", x)
+	
+	input("Presiona [Enter] para continuar...")
+
 
 def exit():
 	sys.exit()
@@ -35,6 +54,8 @@ generators = [
 						"function": mcm},
 				{		"name": "Generador Congruencial Lineal",
 						"function": gcl},
+				{		"name": "Método de aceptación y rechazo",
+						"function": arm},
 				{		"name": "Exit", "function": exit}
 				]
 
