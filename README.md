@@ -40,3 +40,4 @@ TC2007_Quantitative-Methods
 * [ ] Método de Cuadrados Medios
 * [X] GCL
 * [X] Aceptación y Rechazo (ARM)
+* [X] Transformación inversa

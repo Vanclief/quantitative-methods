@@ -96,6 +96,17 @@ def arm_2f():
 	input("Presiona [Enter] para continuar...")
 
 
+def t_inv():
+	a = 1000
+	b = 1500
+	print("Itr | x")
+	for i in range(0,100):
+		r = random.random()
+		x = a + r*(b-a)
+		print(i+1,' |', x)
+
+	input("Presiona [Enter] para continuar...")
+
 def exit():
 	sys.exit()
 
@@ -108,6 +119,8 @@ generators = [
 						"function": arm_2x},
 				{		"name": "Método de aceptación y rechazo -> 2 funciones",
 						"function": arm_2f},
+				{		"name": "Método de la transformada inversa",
+						"function": t_inv},
 				{		"name": "Exit", "function": exit}
 				]
 
