@@ -99,6 +99,8 @@ def arm_2f():
 def t_inv():
 	a = 1000
 	b = 1500
+	print('a = ', a)
+	print('b = ', b)
 	print("Itr | x")
 	for i in range(0,100):
 		r = random.random()
