@@ -41,3 +41,9 @@ TC2007_Quantitative-Methods
 * [X] GCL
 * [X] Aceptación y Rechazo (ARM)
 * [X] Transformación inversa
+
+## Sistema de colas
+
+* [X] Fórmulas generales
+* [X] M/M/1
+* [X] M/M/S
