@@ -179,6 +179,7 @@ def mms():
     cs = mms_cs(cc, s)
     cwls = mms_cwls(cw, ls)
     ct = cs + cwls
+    print("p (ro) = ", p)
     print("P0 = ", p0)
     print("Lq = ", lq)
     print("Wq = ", wq)
