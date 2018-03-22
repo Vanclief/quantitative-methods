@@ -157,21 +157,36 @@ def mms_p_gt_s(lamda, mu, n, p0, s):
     b = math.factorial(s) * pow(s, n-s)
     return a / b
 
+def mms_cs(cc, s):
+    return cc * s
+
+
+def mms_cwls(cw, ls):
+    return cw * ls
+
 def mms():
     lamda = float(input("Escribe el valor de Lambda: "))
     mu = float(input("Escribe el valor de mu: "))
     s = float(input("Escribe el valor de s (número de servidores): "))
+    cc = float(input("Escribe el valor de cc: "))
+    cw = float(input("Escribe el valor de cw: "))
     p = lamda / (s*mu)
     p0 = mms_p0(lamda, mu, s, p)
     lq = mms_lq(lamda, mu, s, p0, p)
     wq = mms_wq(lq, lamda)
     ws = mms_ws(wq, mu)
     ls = mms_ls(lamda, ws)
+    cs = mms_cs(cc, s)
+    cwls = mms_cwls(cw, ls)
+    ct = cs + cwls
     print("P0 = ", p0)
     print("Lq = ", lq)
     print("Wq = ", wq)
     print("Ws = ", ws)
     print("Ls = ", ls)
+    print("Cs = ", cs)
+    print("Cwls = ", cwls)
+    print("CT = ", ct)
 
     more = 1
     while more != 2:
