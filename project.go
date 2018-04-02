@@ -23,7 +23,7 @@ func generateMatrix(n int)(matrix mat.Mutable) {
 	return mat.NewDense(n, n, nil)
 }
 
-func fillMatrix(m mat.Mutable, n int, p int)(z mat.Mutable) {
+func fillMatrix(m mat.Mutable, n int, p int, mode int)(z mat.Mutable) {
 
 	z = mat.NewDense(n, 1, nil)
 
@@ -31,9 +31,12 @@ func fillMatrix(m mat.Mutable, n int, p int)(z mat.Mutable) {
 		// Create random number
 		j := randInt(0, n)
 		k := randInt(0, n)
-		num := m.At(j, k)
+		l := randInt(0, n)
 
-		if (j != k && num != 1) {
+		num := m.At(j, k)
+		num2 := m.At(k, l)
+
+		if (j != k && num != 1 && mode == 0) {
 			// Set matrix to 1
 			m.Set(j, k, 1)
 
@@ -41,7 +44,20 @@ func fillMatrix(m mat.Mutable, n int, p int)(z mat.Mutable) {
 			x := z.At(j, 0)
 			z.Set(j, 0, x+1)
 			i += 1
+
+		} else if (j != k && k != l && num != 1 && num2 !=1 &&  mode == 1) {
+			// Set matrix to 1
+			m.Set(j, k, 1)
+			m.Set(k, l, 1)
+
+			// Set vector counter to + 1
+			x := z.At(j, 0)
+			z.Set(j, 0, x+1)
+			x = z.At(j, 0)
+			z.Set(l, 0, x+1)
+			i += 1
 		}
+
 	}
 
 	return z
@@ -61,7 +77,7 @@ func printMaxAndMin(z mat.Mutable, n int)	{
 		if (val > maxVal) {
 			maxRow = l
 			maxVal = val
-		} else if (val < minVal) {
+		} else if (val <= minVal) {
 			minRow = l
 			minVal = val
 		}
@@ -69,10 +85,11 @@ func printMaxAndMin(z mat.Mutable, n int)	{
 		l += 1
 	}
 
+
 	fmt.Println("Fila con más 1s:")
-	fmt.Println(string(maxRow + 1))
+	fmt.Println(maxRow + 1)
 	fmt.Println("Fila con menos 1s:")
-	fmt.Println(string(minRow + 1))
+	fmt.Println(minRow + 1)
 }
 
 
@@ -85,7 +102,7 @@ func main() {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	var n, percent int
+	var n, percent, mode int
 
 	fmt.Println("Ingrese n:")
 	_, err := fmt.Scanf("%d", &n)
@@ -99,10 +116,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Println("Ingrese 0 para matriz A o 1 para matriz B:")
+	_, err = fmt.Scanf("%d", &mode)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	p := calcP(n, percent)
 
 	matrix := generateMatrix(n)
-	vector := fillMatrix(matrix, n, p)
+	vector := fillMatrix(matrix, n, p, mode)
 	matPrint(matrix)
 	fmt.Println("Matrix count:")
 	matPrint(vector)
