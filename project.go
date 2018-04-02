@@ -77,14 +77,24 @@ func printMaxAndMin(z mat.Mutable, n int)	{
 		if (val > maxVal) {
 			maxRow = l
 			maxVal = val
-		} else if (val <= minVal) {
+		} 
+		
+		l += 1
+	}
+
+	minVal = maxVal
+	
+	for l := 0; l < n; { 
+
+		val := z.At(l, 0)
+		
+		if (val < minVal) {
 			minRow = l
 			minVal = val
 		}
 
 		l += 1
 	}
-
 
 	fmt.Println("Fila con más 1s:")
 	fmt.Println(maxRow + 1)
