@@ -9,7 +9,7 @@ import (
 )
 
 func randInt(min int, max int) int {
-    return min + rand.Intn(max-min)
+	return min + rand.Intn(max-min)
 }
 
 func calcP(n int, percent int) (p int) {
@@ -23,7 +23,10 @@ func generateMatrix(n int)(matrix mat.Mutable) {
 	return mat.NewDense(n, n, nil)
 }
 
-func fillMatrix(m mat.Mutable, n int, p int) {
+func fillMatrix(m mat.Mutable, n int, p int)(z mat.Mutable) {
+
+	z = mat.NewDense(n, 1, nil)
+
 	for i := 0; i < p; {
 		// Create random number
 		j := randInt(0, n)
@@ -31,11 +34,47 @@ func fillMatrix(m mat.Mutable, n int, p int) {
 		num := m.At(j, k)
 
 		if (j != k && num != 1) {
+			// Set matrix to 1
 			m.Set(j, k, 1)
+
+			// Set vector counter to + 1
+			x := z.At(j, 0)
+			z.Set(j, 0, x+1)
 			i += 1
 		}
 	}
+
+	return z
 }
+
+func printMaxAndMin(z mat.Mutable, n int)	{
+
+	var maxRow, minRow int
+	var maxVal, minVal float64
+
+	maxVal, minVal = 0, 0 
+
+	for l := 0; l < n; {
+
+		val := z.At(l, 0)
+
+		if (val > maxVal) {
+			maxRow = l
+			maxVal = val
+		} else if (val < minVal) {
+			minRow = l
+			minVal = val
+		}
+
+		l += 1
+	}
+
+	fmt.Println("Fila con más 1s:")
+	fmt.Println(string(maxRow + 1))
+	fmt.Println("Fila con menos 1s:")
+	fmt.Println(string(minRow + 1))
+}
+
 
 func matPrint(X mat.Mutable) {
 	fa := mat.Formatted(X, mat.Prefix(""), mat.Squeeze())
@@ -63,7 +102,10 @@ func main() {
 	p := calcP(n, percent)
 
 	matrix := generateMatrix(n)
-	fillMatrix(matrix, n, p)
+	vector := fillMatrix(matrix, n, p)
 	matPrint(matrix)
+	fmt.Println("Matrix count:")
+	matPrint(vector)
+	printMaxAndMin(vector, n)
 }
 
