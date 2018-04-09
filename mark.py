@@ -1,19 +1,25 @@
-import numpy as np # I want to check my solution with numpy
+import numpy as np
+
 
 def transition(matrix, steps):
-    return matrix * matrix
+    for x in range(1, steps):
+        matrix = matrix * matrix
+
+    return matrix
 
 
+def main():
+    f = open("matrix.txt", "r")
+    steps = int(input("Ingrese el numero de pasos: "))
+
+    content = f.read()
+
+    matrix = (np.matrix(content))
+
+    matrix = transition(matrix, steps)
+
+    print(matrix)
 
 
-matrix = (np.matrix('0.8 0.2; 0.6 0.4'))
-
-matrix = transition(matrix, 2)
-
-print(matrix)
-
-
-
-
-# mx = np.matrix(x)
-# my = np.matrix(y)
+if __name__ == "__main__":
+    main()
