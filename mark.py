@@ -12,10 +12,7 @@ def main():
     f = open("matrix.txt", "r")
     steps = int(input("Ingrese el numero de pasos: "))
 
-    content = f.read()
-
-    matrix = (np.matrix(content))
-
+    matrix = (np.matrix(f.read()))
     matrix = transition(matrix, steps)
 
     print(matrix)
