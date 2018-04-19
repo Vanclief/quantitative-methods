@@ -41,31 +41,54 @@ class Bank:
         client_number = len(self.clients)
 
         c = Client(client_number)
-        c.change_status('waiting')
 
         self.clients.append(c)
+
+    def insert_next_client(self):
+
+        i = 0
+        c = self.clients[i]
+
+        while c.status and i < len(self.clients) - 1:
+            i += 1
+            c = self.clients[i]
+
+        if not c.status:
+            self.clients[i].change_status('waiting')
 
     def serve_next_client(self):
 
         i = 0
         c = self.clients[i]
 
-        while c.status != 'waiting' and i < len(self.clients):
-            c = self.clients[i]
+        while c.status != 'waiting' and i < len(self.clients) - 1:
             i += 1
+            c = self.clients[i]
 
-        c.change_status('serving')
+        if c.status == 'waiting':
+            self.clients[i].change_status('serving')
 
     def serve_clients(self):
 
         last_client = self.clients[-1]
 
+        c_counter = 0
+        s_counter = 0
+
         while last_client.status != 'served':
 
-            for _ in range(0, self.n_tellers):
-                self.serve_next_client()
+            if c_counter > 1:
+                self.insert_next_client()
+                c_counter = 0
 
-            time.sleep(1)
+            if s_counter > 4:
+                for _ in range(0, self.n_tellers):
+                    self.serve_next_client()
+                s_counter = 0
+
+            time.sleep(0.25)
+            c_counter += 1
+            s_counter += 1
 
             for _, client in enumerate(self.clients):
                 if client.status == 'serving':
