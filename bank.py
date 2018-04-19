@@ -86,6 +86,5 @@ if __name__ == "__main__":
     b.serve_clients()
 
     for i, client in enumerate(b.clients):
-        print(client.number)
         print('Waiting time: ' + str(client.get_waiting_time()))
         print('System time: ' + str(client.get_serving_time()))
