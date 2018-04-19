@@ -125,8 +125,12 @@ def main():
                     v_max[j] = i
 
         new_s = []
+        k = []
         for i in range(size):
             new_s.append(v_max[i] + 1)
+            k.append(maxes[i])
+
+        print("K = ", k)
 
         print(s, "==", new_s, "?", s == new_s)
         prev_s = s.copy()
