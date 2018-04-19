@@ -46,18 +46,33 @@ class Bank:
 
         self.clients.append(c)
 
-    def serve_next_client(self, t):
+    def serve_next_client(self):
 
         i = 0
         c = self.clients[i]
 
-        while c.status != 'waiting':
+        while c.status != 'waiting' and i < len(self.clients):
             c = self.clients[i]
             i += 1
 
         c.change_status('serving')
-        time.sleep(t)
-        c.change_status('served')
+
+    def serve_clients(self):
+
+        last_client = self.clients[-1]
+
+        while last_client.status != 'served':
+
+            for _ in range(0, self.n_tellers):
+                self.serve_next_client()
+
+            time.sleep(1)
+
+            for _, client in enumerate(self.clients):
+                if client.status == 'serving':
+                    client.change_status('served')
+
+            last_client = self.clients[-1]
 
 
 if __name__ == "__main__":
@@ -65,8 +80,18 @@ if __name__ == "__main__":
     b = Bank()
     b.new_client()
     b.new_client()
-    b.serve_next_client(1)
-    b.serve_next_client(1)
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.new_client()
+    b.serve_clients()
 
     for i, client in enumerate(b.clients):
         print(client.number)
