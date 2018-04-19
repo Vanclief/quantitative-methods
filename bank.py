@@ -10,7 +10,6 @@ class Client:
         self.entered_system = None
         self.exited_system = None
         self.status = None
-        print('New client ' + str(self.number) + ' entered the bank')
 
     def change_status(self, status):
         self.status = status
@@ -77,20 +76,13 @@ class Bank:
 
 if __name__ == "__main__":
 
+    n_clients = int(input("Enter the number of clients: >> "))
+
     b = Bank()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
-    b.new_client()
+
+    for _ in range(0, n_clients):
+        b.new_client()
+
     b.serve_clients()
 
     for i, client in enumerate(b.clients):
