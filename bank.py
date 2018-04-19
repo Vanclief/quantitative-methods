@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class Client:
@@ -30,6 +30,7 @@ class Client:
 
     def get_serving_time(self):
         return self.exited_system - self.entered_system
+
 
 class Bank:
 
