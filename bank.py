@@ -12,20 +12,44 @@ def isWaiting(client):
         return False
 
 
+def isServed(client):
+    if client.status == 'served':
+        return True
+    else:
+        return False
+
+
+def isFree(counter):
+    if counter.status == 'free':
+        return True
+    else:
+        return False
+
+
 class Counter:
 
-    def __init__(self, number):
+    def __init__(self, number, mu):
         self.number = number + 1
+        self.mu = mu
         self.status = 'free'
+        self.serving_time = self.get_serving_time()
+        self.cooldown = 0
 
     def serve_client(self, client):
         self.status = 'busy'
         print('Counter ' + str(self.number) + ' serving client ' +
               str(client.number))
+        client.change_status('serving')
 
     def free(self):
         self.status = 'free'
+        self.cooldown = 0
+        self.serving_time = self.get_serving_time()
         print('Counter ' + str(self.number) + ' is now free')
+
+    def get_serving_time(self):
+        x = -1 * self.mu * math.log(random.uniform(0, 1))
+        return x
 
 
 class Client:
@@ -43,10 +67,12 @@ class Client:
 
         if status == 'waiting':
             self.entered_queue = time
+            print('Client ' + str(self.number) + ' has entered the bank')
         elif status == 'serving':
             self.entered_system = time
         elif status == 'served':
             self.exited_system = time
+            print('Client ' + str(self.number) + ' has exited the bank')
 
         # print('Client ' + str(self.number) + ' is now ' + status)
 
@@ -60,17 +86,13 @@ class Client:
 class Bank:
 
     def __init__(self, lamda, mu):
-        self.n_tellers = 2
         self.clients = []
+        self.counters = []
         self.lamda = lamda  # typo on porpuse
         self.mu = mu
 
     def get_arrival_time(self):
         x = -1 * self.lamda * math.log(random.uniform(0, 1))
-        return x
-
-    def get_serving_time(self):
-        x = -1 * self.mu * math.log(random.uniform(0, 1))
         return x
 
     def new_client(self):
@@ -79,6 +101,13 @@ class Bank:
         c = Client(client_number)
 
         self.clients.append(c)
+
+    def new_counter(self):
+        counter_number = len(self.counters)
+
+        c = Counter(counter_number, mu)
+
+        self.counters.append(c)
 
     def insert_next_client(self):
 
@@ -92,7 +121,7 @@ class Bank:
         if not c.status:
             self.clients[i].change_status('waiting')
 
-    def serve_next_client(self):
+    def serve_next_client(self, counter):
 
         i = 0
         c = self.clients[i]
@@ -102,31 +131,44 @@ class Bank:
             c = self.clients[i]
 
         if c.status == 'waiting':
-            self.clients[i].change_status('serving')
+            counter.serve_client(self.clients[i])
 
     def serve_clients(self):
 
         last_client = self.clients[-1]
 
-        c_counter = 0
-        s_counter = 0
+        wait_time = 0
+
+        arrival_time = self.get_arrival_time()
+
+        time_elapsed = 0
 
         while last_client.status != 'served':
 
-            queue = list(filter(isWaiting, self.clients))
+            waiting_clients = list(filter(isWaiting, self.clients))
+            served_clients = list(filter(isServed, self.clients))
+            free_counters = list(filter(isFree, self.counters))
 
-            if c_counter > self.get_arrival_time():
+            # Inser a new client every time the client counter equals the
+            # arribal time
+            if wait_time > arrival_time:
                 self.insert_next_client()
-                c_counter = 0
+                arrival_time = self.get_arrival_time()
+                wait_time = 0
 
-            if s_counter > self.get_serving_time():
-                for _ in range(0, self.n_tellers):
-                    self.serve_next_client()
-                s_counter = 0
+            for i, counter in enumerate(self.counters):
 
-            time.sleep(0.25)
-            c_counter += 1
-            s_counter += 1
+                if counter.status == 'free':
+                    self.serve_next_client(counter)
+
+                elif counter.cooldown > counter.serving_time:
+                    counter.free()
+                else:
+                    counter.cooldown += 1
+
+            time.sleep(0.05)
+            wait_time += 1
+            time_elapsed += 1
 
             for _, client in enumerate(self.clients):
                 if client.status == 'serving':
@@ -134,14 +176,18 @@ class Bank:
 
             last_client = self.clients[-1]
             os.system('clear')
-            print('Clients in queue: ' + str(len(queue)))
-
-
+            print('Time: ' + str(time_elapsed))
+            print('Clients waiting: ' + str(len(waiting_clients)))
+            print('Clients served: ' + str(len(served_clients)))
+            print('Number of counters: ' + str(len(self.counters)))
+            print('Free counters: ' + str(len(free_counters)))
+            print('-- Events --')
 
 
 if __name__ == "__main__":
 
     n_clients = int(input("Enter the number of clients: >> "))
+    n_counters = int(input("Enter the number of counters: >> "))
     lamda = float(input("Enter lambda: >> "))
     mu = float(input("Enter mu: >> "))
 
@@ -150,8 +196,26 @@ if __name__ == "__main__":
     for _ in range(0, n_clients):
         b.new_client()
 
+    for _ in range(0, n_counters):
+        b.new_counter()
+
     b.serve_clients()
 
+    wq = 0
+    ws = 0
+
     for i, client in enumerate(b.clients):
-        print('Waiting time: ' + str(client.get_waiting_time()))
-        print('System time: ' + str(client.get_serving_time()))
+
+        wt = client.get_waiting_time()
+        st = client.get_serving_time()
+
+        wq += wt
+        ws += (wt + st)
+
+    wq = wq / len(b.clients)
+    ws = ws / len(b.clients)
+
+    print('WQ: ' + str(wq))
+    print('WS: ' + str(ws))
+
+
