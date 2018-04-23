@@ -2,6 +2,7 @@ import os
 import time
 import math
 import random
+import mm1
 from datetime import datetime
 
 
@@ -153,9 +154,6 @@ class Bank:
 
         while last_client.status != 'served':
 
-            waiting_clients = list(filter(isWaiting, self.clients))
-            served_clients = list(filter(isServed, self.clients))
-            free_counters = list(filter(isFree, self.counters))
 
             # Inser a new client every time the client counter equals the
             # arribal time
@@ -174,13 +172,17 @@ class Bank:
                 else:
                     counter.cooldown += 1
 
-            time.sleep(0.1)
+            time.sleep(1)
             wait_time += 1
             time_elapsed += 1
 
             for _, client in enumerate(self.clients):
                 if client.status == 'serving':
                     client.change_status('served')
+
+            waiting_clients = list(filter(isWaiting, self.clients))
+            served_clients = list(filter(isServed, self.clients))
+            free_counters = list(filter(isFree, self.counters))
 
             last_client = self.clients[-1]
             os.system('clear')
@@ -190,6 +192,7 @@ class Bank:
             print('Number of counters: ' + str(len(self.counters)))
             print('Free counters: ' + str(len(free_counters)))
             print('-- Events --')
+
 
 
 if __name__ == "__main__":
@@ -226,15 +229,26 @@ if __name__ == "__main__":
         l += x
         mu += u
 
-    wq = wq / len(b.clients)
-    ws = ws / len(b.clients)
-    x = x / len(b.clients)
+    fake_wq = wq / len(b.clients)
+    fake_ws = ws / len(b.clients)
+    x = l / len(b.clients)
+    u = mu / len(b.clients)
     final_lambda = 60 / x
     final_mu = 60 / u
+    rho = final_lambda / (n_counters * final_mu)
 
-    print('WQ: ' + str(wq))
-    print('WS: ' + str(ws))
+    p0 = mm1.mms_p0(final_lambda, final_mu, n_counters, rho)
+    lq = mm1.mms_lq(final_lambda, final_mu, n_counters, p0, rho)
+    wq = mm1.mms_wq(lq, final_lambda)
+    ws = mm1.mms_ws(wq, final_mu)
+    ls = mm1.mms_ls(final_lambda, ws)
+
+    print('Obtained WQ: ' + str(fake_wq))
+    print('Obtained WS: ' + str(fake_ws))
     print('Lambda ' + str(final_lambda))
     print('Mu ' + str(final_mu))
-
-
+    print('Rho ' + str(rho))
+    print('LQ ' + str(lq))
+    print('WQ ' + str(wq))
+    print('WS ' + str(ws))
+    print('LS ' + str(ls))
