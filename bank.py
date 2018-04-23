@@ -40,6 +40,7 @@ class Counter:
         print('Counter ' + str(self.number) + ' serving client ' +
               str(client.number))
         client.change_status('serving')
+        client.set_service_time(mu)
 
     def free(self):
         self.status = 'free'
@@ -60,6 +61,8 @@ class Client:
         self.entered_system = None
         self.exited_system = None
         self.status = None
+        self.x = None
+        self.mu = None
 
     def change_status(self, status):
         self.status = status
@@ -74,7 +77,11 @@ class Client:
             self.exited_system = time
             print('Client ' + str(self.number) + ' has exited the bank')
 
-        # print('Client ' + str(self.number) + ' is now ' + status)
+    def set_arrival_time(self, x):
+        self.x = x
+
+    def set_service_time(self, mu):
+        self.mu = mu
 
     def get_waiting_time(self):
         return self.entered_system - self.entered_queue
@@ -109,7 +116,7 @@ class Bank:
 
         self.counters.append(c)
 
-    def insert_next_client(self):
+    def insert_next_client(self, x):
 
         i = 0
         c = self.clients[i]
@@ -120,6 +127,7 @@ class Bank:
 
         if not c.status:
             self.clients[i].change_status('waiting')
+            self.clients[i].set_arrival_time(x)
 
     def serve_next_client(self, counter):
 
@@ -152,7 +160,7 @@ class Bank:
             # Inser a new client every time the client counter equals the
             # arribal time
             if wait_time > arrival_time:
-                self.insert_next_client()
+                self.insert_next_client(arrival_time)
                 arrival_time = self.get_arrival_time()
                 wait_time = 0
 
@@ -166,7 +174,7 @@ class Bank:
                 else:
                     counter.cooldown += 1
 
-            time.sleep(0.05)
+            time.sleep(0.1)
             wait_time += 1
             time_elapsed += 1
 
@@ -187,9 +195,9 @@ class Bank:
 if __name__ == "__main__":
 
     n_clients = int(input("Enter the number of clients: >> "))
-    n_counters = int(input("Enter the number of counters: >> "))
-    lamda = float(input("Enter lambda: >> "))
-    mu = float(input("Enter mu: >> "))
+    n_counters = int(input("Enter the number of servers: >> "))
+    lamda = float(input("Enter aproximated arrival time: >> "))
+    mu = float(input("Enter aproximated service time: >> "))
 
     b = Bank(lamda, mu)
 
@@ -203,19 +211,30 @@ if __name__ == "__main__":
 
     wq = 0
     ws = 0
+    l = 0
+    mu = 0
 
     for i, client in enumerate(b.clients):
 
         wt = client.get_waiting_time()
         st = client.get_serving_time()
+        x = client.x
+        u = client.mu
 
         wq += wt
         ws += (wt + st)
+        l += x
+        mu += u
 
     wq = wq / len(b.clients)
     ws = ws / len(b.clients)
+    x = x / len(b.clients)
+    final_lambda = 60 / x
+    final_mu = 60 / u
 
     print('WQ: ' + str(wq))
     print('WS: ' + str(ws))
+    print('Lambda ' + str(final_lambda))
+    print('Mu ' + str(final_mu))
 
 
