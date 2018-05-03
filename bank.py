@@ -155,8 +155,8 @@ class Bank:
         while last_client.status != 'served':
 
 
-            # Inser a new client every time the client counter equals the
-            # arribal time
+            # Insert a new client every time the client counter equals the
+            # arrival time
             if wait_time > arrival_time:
                 self.insert_next_client(arrival_time)
                 arrival_time = self.get_arrival_time()
@@ -193,6 +193,35 @@ class Bank:
             print('Free counters: ' + str(len(free_counters)))
             print('-- Events --')
 
+        # Just wait for the counters to finish attending
+        free_counters = list(filter(isFree, self.counters))
+        while len(free_counters) < len(self.counters):
+            for i, counter in enumerate(self.counters):
+
+                if counter.status == 'free':
+                    self.serve_next_client(counter)
+
+                elif counter.cooldown > counter.serving_time:
+                    counter.free()
+                else:
+                    counter.cooldown += 1
+
+            time.sleep(1)
+            wait_time += 1
+            time_elapsed += 1
+
+            waiting_clients = list(filter(isWaiting, self.clients))
+            served_clients = list(filter(isServed, self.clients))
+            free_counters = list(filter(isFree, self.counters))
+
+            last_client = self.clients[-1]
+            os.system('clear')
+            print('Time: ' + str(time_elapsed))
+            print('Clients waiting: ' + str(len(waiting_clients)))
+            print('Clients served: ' + str(len(served_clients)))
+            print('Number of counters: ' + str(len(self.counters)))
+            print('Free counters: ' + str(len(free_counters)))
+            print('-- Events --')
 
 
 if __name__ == "__main__":
