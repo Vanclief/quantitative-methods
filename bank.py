@@ -41,12 +41,12 @@ class Counter:
         print('Counter ' + str(self.number) + ' serving client ' +
               str(client.number))
         client.change_status('serving')
-        client.set_service_time(mu)
+        client.set_service_time(self.serving_time)
 
     def free(self):
         self.status = 'free'
         self.cooldown = 0
-        self.serving_time = self.get_serving_time()
+        # self.serving_time = self.get_serving_time()
         print('Counter ' + str(self.number) + ' is now free')
 
     def get_serving_time(self):
@@ -158,7 +158,7 @@ class Bank:
             # Insert a new client every time the client counter equals the
             # arrival time
             if wait_time > arrival_time:
-                self.insert_next_client(arrival_time)
+                self.insert_next_client(wait_time)
                 arrival_time = self.get_arrival_time()
                 wait_time = 0
 
@@ -262,8 +262,11 @@ if __name__ == "__main__":
     fake_ws = ws / len(b.clients)
     x = l / len(b.clients)
     u = mu / len(b.clients)
-    final_lambda = 60 / x
-    final_mu = 60 / u
+    # final_lambda = 60 / x
+    final_lambda = len(b.clients) * 60 / l
+    # final_mu = 60 / u
+    final_mu = len(b.clients) * 60 * n_counters / mu 
+
     rho = final_lambda / (n_counters * final_mu)
 
     p0 = mm1.mms_p0(final_lambda, final_mu, n_counters, rho)
